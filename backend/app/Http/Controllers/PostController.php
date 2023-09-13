@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Post;
 
 class PostController extends Controller
@@ -13,7 +14,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::all();
-        return response()->json(['posts' => $posts]);
+        return response()->json(["posts" => $posts], 200);
     }
 
     /**
@@ -21,7 +22,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        $users = User::all();
+        return response()->json(["users" => $users], 200);
     }
 
     /**
@@ -29,15 +31,38 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $post = new Post();
+        
+        $post = new Post;
         $post->title = $request->title;
-        $post->slug = $request->slug;
         $post->content = $request->content;
-        $post->user_id = '1';
+        $post->slug = $request->slug;
+        $post->user_id = $request->user;
         $post->save();
 
-        return response()->json(['status' => 'post saved', 'code' => 200]);
+        return response()->json(["post" => $post, "message" => "successfully created"], 200);
     }
+
+
+//     public function store(Request $request)
+// {
+//     // Validate the request data
+//     $validatedData = $request->validate([
+//         'title' => 'required|string|max:255',
+//         'content' => 'required|string',
+//         'slug' => 'required|string|unique:posts',
+//         'user_id' => 'required|exists:users,id', // Ensure 'user_id' is required and exists in the 'users' table.
+//     ]);
+
+    // Create a new Post instance and fill it with validated data
+//     $post = new Post;
+//     $post->title = $validatedData['title'];
+//     $post->content = $validatedData['content'];
+//     $post->slug = $validatedData['slug'];
+//     $post->user_id = $validatedData['user_id']; // Use 'user_id' from the validated data
+//     $post->save();
+
+//     return response()->json(["post" => $post, "message" => "successfully created"], 200);
+// }
 
     /**
      * Display the specified resource.
@@ -52,8 +77,8 @@ class PostController extends Controller
      */
     public function edit(string $id)
     {
-        $post = Post::find();
-        return;
+        $post = Post::find($id);
+        return response()->json(["post" => $post], 200);
     }
 
     /**
@@ -61,14 +86,11 @@ class PostController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        // dd($request);
         $post = Post::find($id);
-        $post->title=$request->title;
-        $post->slug=$request->slug;
-        $post->content = $request->content;
-        $post->user_id='1';
-        $post->save();
-        return response()->json(['status'=>'post saved', 'code'=>201]);
-
+        $post->update($request->all());
+        
+        return response()->json(["post" => $post, "message" => "successfully updated"], 200);
     }
 
     /**
@@ -77,6 +99,6 @@ class PostController extends Controller
     public function destroy(string $id)
     {
         Post::destroy($id);
-        return response()->json(['status'=>'post deleted', 'code'=>200]);
+        return response()->json(["message" => "successfully deleted"], 200);
     }
 }
