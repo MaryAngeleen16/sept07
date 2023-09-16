@@ -1,93 +1,76 @@
 import React, { useState } from 'react'
-import Nav from './Nav';
-import Footer from './Footer'
+import Title from './Title';
 import axios from 'axios';
-
+import { useNavigate } from "react-router-dom";
+import Nav from './Nav';
+import { Container } from '@mui/material';
 
 const Create = () => {
-
-    const styles = {
-        width: "50%",
-        
-    }
-
-    const handleSubmit = e => {
-        e.preventDefault();
-        console.log(title, content, user)
-
-        axios
-            .post('http://127.0.0.1:8000/api/posts', state)
-            .then((res) => {
-                console.log(res.data);
-                setState({
-                    title: '',
-                    content: '',
-                    user: '',
-                    slug: "",
-                })
-            })
-            .catch((err) => {
-                console.log(err.response.data.message);
-            })
-    }
 
     const [state, setState] = useState({
         title: '',
         content: '',
-        user: '',
-        slug: '',
+        slug:'',
+        user: ''
     });
 
-    const { title, content, user, slug } = state;
+    const navigate = useNavigate()
+
+    const { title, content, slug, user } = state;
 
     const handleChange = name => event => {
+        console.log('name', name, 'event', event.target.value);
         setState({ ...state, [name]: event.target.value });
     }
 
+    const handleSubmit = event => {
+        event.preventDefault();
+        // axios.post(`${process.env.REACT_APP_API}/posts`, { title, content, user })
+        axios.post(`http://127.0.0.1:8000/api/posts`, { title, content, slug, user })
+            .then(response => {
+                console.log(response)
+                setState({ ...state, title: '', content: '', slug: '', user: '' });
+                alert(`Post ${response.data.title} is created`);
+                return navigate("/");
+            })
+            .catch(error => {
+                console.log(error.response)
+                alert(error.response.data.error);
+            })
+    };
 
     return (
-        <>
+        <div>
             <Nav />
-            <div className="container p-xxl-5 p-sm-5" style={styles}>
-                <h1 style={{ textAlign: "center" }}> Create</h1>
+            <Container>
+                <Title name='Create New Post' />
+                <br />
                 <form onSubmit={handleSubmit}>
-                    <div className='form-group'>
-                        <label className='text-muted'>Title</label>
-                        <input type='text'
-                            className='form-control'
-                            value={title}
-                            onChange={handleChange('title')}
-                        />
+                    <div className="form-group">
+                        <label className='text-muted'>Title </label>
+                        <input type="text" className='form-control' placeholder='Post Title' required onChange={handleChange('title')} value={title} />
                     </div>
                     <div className='form-group'>
-                        <label className='text-muted'>Content</label>
-                        <textarea type='text'
-                            className='form-control'
-                            value={content}
-                            onChange={handleChange('content')}
-                        > </textarea>
+                        <label className='text-muted'>Content </label>
+                        <textarea type="text" className='form-control' placeholder='Write Something...' required onChange={handleChange('content')} value={content} />
                     </div>
-                    <div className='form-group'>
-                        <label className='text-muted'>Slug</label>
-                        <input type='text'
-                            className='form-control'
-                            value={slug}
-                            onChange={handleChange('slug')}
-                        />
+
+                    <div className="form-group">
+                        <label className='text-muted'>Slug </label>
+                        <input type="text" className='form-control' placeholder='The slug...' required onChange={handleChange('slug')} value={slug} />
                     </div>
-                    <div className='form-group'>
-                        <label className='text-muted'>User</label>
-                        <input type='text'
-                            className='form-control'
-                            value={user}
-                            onChange={handleChange('user')}
-                        />
+                    
+                    
+                    <div className="form-group">
+                        <label className='text-muted'>User </label>
+                        <input type="text" className='form-control' placeholder='Your Name' required onChange={handleChange('user')} value={user} />
                     </div>
-                    <button style={{ marginTop: "20px" }} type='submit' className='btn btn-primary'>Submit</button>
+                    <div>
+                        <button className='btn btn-primary' type='submit'>Create</button>
+                    </div>
                 </form>
-            </div >
-            <Footer />
-        </>
+            </Container>
+        </div>
     )
 }
 

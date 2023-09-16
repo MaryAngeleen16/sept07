@@ -42,28 +42,6 @@ class PostController extends Controller
         return response()->json(["post" => $post, "message" => "successfully created"], 200);
     }
 
-
-//     public function store(Request $request)
-// {
-//     // Validate the request data
-//     $validatedData = $request->validate([
-//         'title' => 'required|string|max:255',
-//         'content' => 'required|string',
-//         'slug' => 'required|string|unique:posts',
-//         'user_id' => 'required|exists:users,id', // Ensure 'user_id' is required and exists in the 'users' table.
-//     ]);
-
-    // Create a new Post instance and fill it with validated data
-//     $post = new Post;
-//     $post->title = $validatedData['title'];
-//     $post->content = $validatedData['content'];
-//     $post->slug = $validatedData['slug'];
-//     $post->user_id = $validatedData['user_id']; // Use 'user_id' from the validated data
-//     $post->save();
-
-//     return response()->json(["post" => $post, "message" => "successfully created"], 200);
-// }
-
     /**
      * Display the specified resource.
      */
