@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios'
 import Title from './Title';
-
-
 import './App.css';
-
-
 import Nav from './Nav';
 import Footer from './Footer'
+import PostList from './PostList';
 
 
 const App = () => {
@@ -52,7 +49,7 @@ const App = () => {
       <Nav />
       <Title title="MY BLOG POSTS" user="Angel" />
       <div className='container p-xxl-5 p-sm-5'>
-        {posts.map((post) => (
+        {/* {posts.map((post) => (
           <div key={post.id} style={{ marginBottom: "50px" }}>
             <h4 style={{color: "MediumSeaGreen" }}>{post.title}</h4>
             <p style={{color: "Coral" }}>{post.content}</p>
@@ -61,7 +58,13 @@ const App = () => {
               <button data-id={post.id} onClick={handleDelete} className='btn btn-outline-danger'>Delete</button>
             </div>
           </div>
-        ))}
+        ))} */}
+
+      {posts.map((post, i) => (
+        <div className='container'>
+          <PostList post={post} /><br />
+        </div>
+      ))}
       </div>
       <Footer />
     </div>

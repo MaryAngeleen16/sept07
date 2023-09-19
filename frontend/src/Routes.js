@@ -11,7 +11,7 @@ const RoutedApp = () => {
             <Routes>
                 <Route path="/" exact="true" element={<App />} />
                 <Route path="/create" exact="true" element={<Create />} />
-                <Route path="/posts/:id" element={<SinglePost />} />
+                <Route path="/post/:id" exact="true" element={<SinglePost />} />
                 <Route path="/posts/edit/:id" element={<UpdatePost />} />
             </Routes>
         </Router>
